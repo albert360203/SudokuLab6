@@ -318,8 +318,6 @@ public class SudokuController implements Initializable {
 						Dragboard db = event.getDragboard();
 						boolean success = false;
 						Cell CellTo = (Cell) paneTarget.getCell();
-						
-						
 
 						//TODO: This is where you'll find mistakes.  
 						//		Keep track of mistakes... as an attribute of Sudoku... start the attribute
@@ -329,6 +327,29 @@ public class SudokuController implements Initializable {
 						//		If the number of mistakes >= max mistakes, end the game
 						if (db.hasContent(myFormat)) {
 							Cell CellFrom = (Cell) db.getContent(myFormat);
+							
+							if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
+								
+								game.getSudoku().AddMistake();
+								BuildTopGrid();
+								
+								if(game.getSudoku().getiMistakesCnt()>=game.geteGameDifficulty().getiMaxMistakes())
+								{
+									Alert alert3 = new Alert(AlertType.INFORMATION);
+									alert3.setTitle("Game Result");
+									alert3.setHeaderText("LOST");
+									alert3.setContentText("Your mistakes exceeds the Maximum!\nTry again!");
+									alert3.showAndWait();
+								}
+								
+								if (game.getShowHints()) {
+								}
+							}
+							
+							int row = CellTo.getiRow();
+							int col = CellTo.getiCol();
+							int num = CellFrom.getiCellValue();
+							game.getSudoku().getLatinSquare()[row][col]=num;
 							
 							if(!s.ContainsZero())
 							{
@@ -349,26 +370,6 @@ public class SudokuController implements Initializable {
 									alert2.showAndWait();
 								}
 							}
-							
-							if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
-								
-								game.getSudoku().AddMistake();
-								BuildTopGrid();
-								
-								if(game.getSudoku().getiMistakesCnt()>=game.geteGameDifficulty().getiMaxMistakes())
-								{
-									Alert alert3 = new Alert(AlertType.INFORMATION);
-									alert3.setTitle("Game Result");
-									alert3.setHeaderText("LOST");
-									alert3.setContentText("Your mistakes exceeds the Maximum!\nTry again!");
-									alert3.showAndWait();
-								}
-								
-								if (game.getShowHints()) {
-								}
-							}
-							
-							
 							
 
 							//	This is the code that is actually taking the cell value from the drag-from 
