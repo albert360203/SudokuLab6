@@ -6,9 +6,10 @@ import java.util.Map;
 
 public enum eGameDifficulty {
 
-	EASY(100), MEDIUM(500), HARD(1000);
+	EASY(100,5), MEDIUM(500,4), HARD(1000,3);
 
 	private final int iDifficulty;
+	private final int iMaxMistakes;
 
 	private static final Map<Integer, eGameDifficulty> lookup = new HashMap<Integer, eGameDifficulty>();
 
@@ -18,12 +19,19 @@ public enum eGameDifficulty {
 		}
 	}
 
-	private eGameDifficulty(int iDifficulty) {
+	private eGameDifficulty(int iDifficulty, int iMaxMistakes) {
 		this.iDifficulty = iDifficulty;
+		this.iMaxMistakes = iMaxMistakes;
 	}
 
 	public int getiDifficulty() {
 		return iDifficulty;
+	}
+	
+	
+
+	public int getiMaxMistakes() {
+		return iMaxMistakes;
 	}
 
 	@Override

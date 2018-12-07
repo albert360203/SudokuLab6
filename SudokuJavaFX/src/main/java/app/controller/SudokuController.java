@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import app.Game;
 import app.helper.SudokuCell;
 import app.helper.SudokuStyler;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,6 +18,8 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
@@ -110,7 +113,7 @@ public class SudokuController implements Initializable {
 	private void BuildGrids() {
 
 		// Paint the top grid on the form
-		BuildTopGrid(eGD);
+		BuildTopGrid();
 		GridPane gridSudoku = BuildSudokuGrid();
 
 		// gridSudoku.getStyleClass().add("GridPane");
@@ -136,11 +139,14 @@ public class SudokuController implements Initializable {
 	 * @since Lab #5
 	 * @param event
 	 */
-	private void BuildTopGrid(eGameDifficulty eGD) {
+	private void BuildTopGrid() {
 		gpTop.getChildren().clear();
 
 		Label lblDifficulty = new Label(eGD.toString());
 		gpTop.add(lblDifficulty, 0, 0);
+		
+		Label lblMistakes = new Label(this.game.getSudoku().getMistakesMessage());
+        gpTop.add(lblMistakes, 1, 0);
 
 		ColumnConstraints colCon = new ColumnConstraints();
 		colCon.halignmentProperty().set(HPos.CENTER);
@@ -323,11 +329,47 @@ public class SudokuController implements Initializable {
 							Cell CellFrom = (Cell) db.getContent(myFormat);
 
 							if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
+								
+								game.getSudoku().AddMistake();
+								BuildTopGrid();
+								
+								if(game.getSudoku().getiMistakesCnt()>=game.geteGameDifficulty().getiMaxMistakes())
+								{
+									Alert alert = new Alert(AlertType.INFORMATION);
+									alert.setTitle("Too Bad!");
+									alert.setHeaderText("You Lose");
+									alert.setContentText("Try again!");
+									alert.showAndWait();
+									//Platform.exit();
+							        //System.exit(0);
+								}
+								
 								if (game.getShowHints()) {
-
+									
 								}
 
 							}
+							
+							if(!game.getSudoku().ContainsZero())
+							{
+								if(s.isSudoku())
+								{
+									Alert alert = new Alert(AlertType.INFORMATION);
+									alert.setTitle("Congratulations");
+									alert.setHeaderText("You Won");
+									alert.setContentText("You're a sudoku genius");
+									alert.showAndWait();
+								}
+								else
+								{
+									Alert alert = new Alert(null);
+									alert.setTitle("Too Bad!");
+									alert.setHeaderText("You Lose");
+									alert.setContentText("Try again!");
+									alert.showAndWait();
+								}
+							}
+							
 
 							//	This is the code that is actually taking the cell value from the drag-from 
 							//	cell and dropping a new Image into the dragged-to cell

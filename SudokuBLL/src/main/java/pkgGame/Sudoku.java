@@ -49,6 +49,29 @@ public class Sudoku extends LatinSquare implements Serializable {
 	private HashMap<Integer, SudokuCell> cells = new HashMap<Integer, SudokuCell>();
 
 	private eGameDifficulty eGameDifficulty;
+	
+
+	private int iMistakesCnt = 0;
+
+	public int getiMistakesCnt() {
+		return iMistakesCnt;
+	}
+
+	public void setiMistakesCnt(int iMistakesCnt) {
+		this.iMistakesCnt = iMistakesCnt;
+	}
+	
+	public String getMistakesMessage()
+    {
+		return this.getiMistakesCnt() + "/" + this.eGameDifficulty.getiMaxMistakes() + " mistakes";
+    }
+	
+    public void AddMistake()
+    {
+    	this.iMistakesCnt++;
+    }
+	
+	
 
 	/**
 	 * Sudoku - No-arg private constructor should set the eGameDifficulty to EASY by
