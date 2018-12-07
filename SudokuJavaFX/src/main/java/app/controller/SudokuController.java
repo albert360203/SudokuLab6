@@ -318,6 +318,8 @@ public class SudokuController implements Initializable {
 						Dragboard db = event.getDragboard();
 						boolean success = false;
 						Cell CellTo = (Cell) paneTarget.getCell();
+						
+						
 
 						//TODO: This is where you'll find mistakes.  
 						//		Keep track of mistakes... as an attribute of Sudoku... start the attribute
@@ -327,7 +329,27 @@ public class SudokuController implements Initializable {
 						//		If the number of mistakes >= max mistakes, end the game
 						if (db.hasContent(myFormat)) {
 							Cell CellFrom = (Cell) db.getContent(myFormat);
-
+							
+							if(!s.ContainsZero())
+							{
+								if(s.isSudoku())
+								{
+									Alert alert1 = new Alert(AlertType.INFORMATION);
+									alert1.setTitle("Game Result");
+									alert1.setHeaderText("WON!");
+									alert1.setContentText("Congratulation!\nHave a nice day!");
+									alert1.showAndWait();
+								}
+								else
+								{
+									Alert alert2 = new Alert(AlertType.INFORMATION);
+									alert2.setTitle("Game Result");
+									alert2.setHeaderText("LOST");
+									alert2.setContentText("It is not a valid Sudoku!\nTry again!");
+									alert2.showAndWait();
+								}
+							}
+							
 							if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
 								
 								game.getSudoku().AddMistake();
@@ -335,40 +357,18 @@ public class SudokuController implements Initializable {
 								
 								if(game.getSudoku().getiMistakesCnt()>=game.geteGameDifficulty().getiMaxMistakes())
 								{
-									Alert alert = new Alert(AlertType.INFORMATION);
-									alert.setTitle("Too Bad!");
-									alert.setHeaderText("You Lose");
-									alert.setContentText("Try again!");
-									alert.showAndWait();
-									//Platform.exit();
-							        //System.exit(0);
+									Alert alert3 = new Alert(AlertType.INFORMATION);
+									alert3.setTitle("Game Result");
+									alert3.setHeaderText("LOST");
+									alert3.setContentText("Your mistakes exceeds the Maximum!\nTry again!");
+									alert3.showAndWait();
 								}
 								
 								if (game.getShowHints()) {
-									
 								}
-
 							}
 							
-							if(!game.getSudoku().ContainsZero())
-							{
-								if(s.isSudoku())
-								{
-									Alert alert = new Alert(AlertType.INFORMATION);
-									alert.setTitle("Congratulations");
-									alert.setHeaderText("You Won");
-									alert.setContentText("You're a sudoku genius");
-									alert.showAndWait();
-								}
-								else
-								{
-									Alert alert = new Alert(null);
-									alert.setTitle("Too Bad!");
-									alert.setHeaderText("You Lose");
-									alert.setContentText("Try again!");
-									alert.showAndWait();
-								}
-							}
+							
 							
 
 							//	This is the code that is actually taking the cell value from the drag-from 
